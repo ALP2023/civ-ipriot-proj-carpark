@@ -10,15 +10,17 @@ class Sensor:
         self.topic = config['topic']
         self.broker = config['broker']
         self.port = config['port']
+        self.type = config['type']  # ENTRY or EXIT
         
-        # initialise a paho client and bind it to the object (has-a)
+        # initialise a paho client and bind it to the object Sensor (has-a)
         self.client = paho.Client()
         self.client.connect(self.broker,
                             self.port)
 
-
     def on_detection(self, message):
-        """The method that is triggered when a detection occurs"""
+        """The method that is triggered when a detection occurs
+        - sends a message to MQTT and to all listener/subscriber"""
+        message = f'{self.type}, {message}'
         self.client.publish(self.topic, message)
 
     def start_sensing(self):
@@ -34,7 +36,8 @@ if __name__ == '__main__':
               'location': 'L306',
               'topic': "lot/sensor",
               'broker': 'localhost',
-              'port': 1883}
+              'port': 1883,
+              'type': 'ENTRY'}
 
     sensor = Sensor(config)
     print("Sensor initialized")

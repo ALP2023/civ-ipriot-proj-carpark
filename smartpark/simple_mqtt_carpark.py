@@ -1,21 +1,24 @@
 """Demonstrates a simple implementation of an 'event' listener that triggers 
 a publication via mqtt"""
 import paho.mqtt.client as paho
+import json
 
-
-class Sensor:
+class Carpark:
     def __init__(self, config):
         self.name = config['name']
         self.location = config['location']
         self.topic = config['topic']
         self.broker = config['broker']
         self.port = config['port']
-        self.type = config['type']  # ENTRY or EXIT
+        self.type = config['type']  # SPACES or FULL
         
         # initialise a paho client and bind it to the object Sensor (has-a)
         self.client = paho.Client()
         self.client.connect(self.broker,
                             self.port)
+
+        # subscribe to the topic to listen to it in an instance
+        client.subscribe(TOPIC)
 
     def on_detection(self, message):
         """The method that is triggered when a detection occurs
@@ -34,7 +37,7 @@ class Sensor:
 if __name__ == '__main__':
     config = {'name': 'super sensor',
               'location': 'L306',
-              'topic': "lot/sensor",
+              'topic': "Vacancy",
               'broker': 'localhost',
               'port': 1883,
               'type': 'ENTRY'}
