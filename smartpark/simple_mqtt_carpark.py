@@ -1,27 +1,36 @@
-"""Demonstrates a simple implementation of an 'event' listener that triggers 
-a publication via mqtt"""
 import paho.mqtt.client as paho
 import mqtt_device
+
 class Carpark(mqtt_device.MqttDevice):
-    """Carpark object that is both a subscriber and publisher"""
+    """Creates a carpark object to store the state of cars in the lot"""
+
     def __init__(self, config):
         super().__init__(config)
-        self.total_spaces = config['total_spaces']
-        self.total_cars = config['total_cars']
+        self.total_spaces = config['total-spaces']
+        self.total_cars = config['total-cars']
         self.client.on_message = self.on_message
-        self.client.subscribe(self.topic)
+        self.client.subscribe('+/+/+/+')
         self.client.loop_forever()
 
-    def available_spaces
+    @property
+    def available_spaces(self):
+        available = self.total_spaces - self.total_cars
+        return available if available > 0 else 0
     def on_car_entry(self):
-        self.total_cars = 1
+        self.total_cars += 1
+        # TODO: Publish to MQTT
+
     def on_car_exit(self):
         self.total_cars -= 1
+        # TODO: Publish to MQTT
 
     def on_message(self, client, userdata, msg):
-        print(f'Received {msg.payload.decode()}')
-
-
+        # print(f'Received {msg.payload.decode()}')
+        topic = msg.topic().strip().split('/')[-1]
+        if topic == 'entry:':
+            self.on_car_entry()
+        else:
+            self.on_car_exit()
 
 
 if __name__ == '__main__':
@@ -29,12 +38,13 @@ if __name__ == '__main__':
               'total_spaces': 100,
               'total_cars': 0,
               'location': 'L306',
-              'topic-root': "Space",
+              'topic-root': "space",
+              'device_name': 'carpark',
+              'topic-qualifier': 'entry',
               'broker': 'localhost',
-              'port': 1883,
-              'topic-qualifier': 'ENTRY'}
+              'port': 1883
+              }
 
-    sensor = Carpark(config)
-    print("Car park initialized")
-    sensor.start_sensing()
+    carpark = Carpark(config)
+    print("Car park initialised")
 

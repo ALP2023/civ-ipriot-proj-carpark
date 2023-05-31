@@ -2,20 +2,23 @@
 a publication via mqtt"""
 import paho.mqtt.client as paho
 
+
 class MqttDevice:
     def __init__(self, config):
+
         self.name = config['name']
         self.location = config['location']
 
         # Define topic components:
         self.topic_root = config['topic-root']
         self.topic_qualifier = config['topic-qualifier']
-        self.topic_device = device_name
+        self.topic_device = config['device_name']
         self.topic = self._create_topic_string()
 
         # Configure broker
         self.broker = config['broker']
         self.port = config['port']
+
 
         # initialise a paho client and bind it to the object Sensor (has-a)
 
