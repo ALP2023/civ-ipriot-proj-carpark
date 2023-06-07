@@ -6,7 +6,6 @@ from paho.mqtt.client import MQTTMessage
 import json
 from config_parser import parse_config
 
-
 class CarPark(mqtt_device.MqttDevice):
     """Creates a carpark object to store the state of cars in the lot"""
 
@@ -28,6 +27,7 @@ class CarPark(mqtt_device.MqttDevice):
     @property
     def temperature(self):
         self._temperature
+        return self._temperature
     
     @temperature.setter
     def temperature(self, value):
@@ -39,13 +39,13 @@ class CarPark(mqtt_device.MqttDevice):
             (
                 f"TIME: {readable_time}, "
                 + f"SPACES: {self.available_spaces}, "
-                + "TEMPC: 42"
+                + f"TEMPC: {self.temperature}"
             )
         )
         message = (
             f"TIME: {readable_time}, "
             + f"SPACES: {self.available_spaces}, "
-            + "TEMPC: 42"
+            + f"TEMPC: {self.temperature}"
         )
         self.client.publish('display', message)
 
@@ -68,32 +68,20 @@ class CarPark(mqtt_device.MqttDevice):
     def on_message(self, client, userdata, msg: MQTTMessage):
         payload = msg.payload.decode()
 
-
         # TODO: Extract temperature from payload
-        """self.temperature = float(temperature_str) # Extracted value"""
-
+        """self.temperature =   # Extracted value"""
+        self.temperature = payload.strip().split('/')[-1]
         if 'exit' in payload:
             self.on_car_exit()
         else:
             self.on_car_entry()
 
 
-
 if __name__ == '__main__':
-    """config = {'name': 'Disaster-park',
-              'total_spaces': 100,
-              'total_cars': 0,
-              'location': 'L306',
-              'topic-root': "space",
-              'device_name': 'carpark',
-              'broker': 'localhost',
-              'port': 1883,
-              'topic-qualifier': 'entry',
-              'is_stuff': False
-              }"""
+
     # TODO: Read config from file
     config = parse_config()
     car_park = CarPark(config)
-    print("Carpark initialised")
+    # print("Carpark initialised")
 
 
