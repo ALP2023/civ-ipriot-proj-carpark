@@ -1,0 +1,31 @@
+{
+    "CarParks": [
+        {
+            "name": "Disaster-park",
+            "total-spaces": 10,
+            "total-cars": 0,
+            "location": "L306",
+            "topic-root": "space",
+            "device_name": "carpark",
+            "broker": "localhost",
+            "port": 1883,
+            "topic-qualifier": "entry",
+            "is_stuff": False,
+            "Sensors": [
+                {
+                    "name": "sensor1",
+                    "type": "entry"
+                },
+                {
+                    "name": "sensor2",
+                    "type": "exit"
+                }
+            ],
+            "Displays": [
+                {
+                    "name": "display1"
+                }
+            ]
+        }
+    ]
+}
