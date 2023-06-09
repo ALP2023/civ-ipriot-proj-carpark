@@ -1,5 +1,6 @@
 import mqtt_device
 import time
+from config_parser import parse_config
 class Display(mqtt_device.MqttDevice):
     """Displays the number of cars and the temperature"""
     def __init__(self, config):
@@ -23,15 +24,16 @@ class Display(mqtt_device.MqttDevice):
        #  temperature, time
 
 if __name__ == '__main__':
-    config = {'name': 'display',
+    """config = {'name': 'display',
      'location': 'L306',
      'topic-root': "lot",
      'broker': 'localhost',
      'port': 1883,
      'topic-qualifier': 'na'
-     }
+     }"""
 
     # The above is a dictionary
     # TODO: Read previous config from file instead of embedding if time
-    display = Display(config)
+    config2 = parse_config()
+    display = Display(config2)
 
