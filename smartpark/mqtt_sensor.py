@@ -1,9 +1,8 @@
 """Demonstrates a simple implementation of an 'event' listener that triggers
 a publication via mqtt"""
 import random
-
 import mqtt_device
-
+from config_parser import parse_config
 
 class Sensor(mqtt_device.MqttDevice):
     @property
@@ -28,17 +27,18 @@ class Sensor(mqtt_device.MqttDevice):
                 self.on_detection(f"exited, {self.temperature}")
 
 if __name__ == '__main__':
-    config1 = {'name': 'sensor',
+    """config1 = {'name': 'sensor',
               'location': 'L306',
               'topic-root': "lot",
               'device_name': 'sensor',
               'topic-qualifier': 'entry',
               'broker': 'localhost',
               'port': 1883
-              }
+              }"""
     # The above is a dictionary
     # TODO: Read previous config from file instead of embedding if time
 
+    config1 = parse_config()
     sensor1 = Sensor(config1)
 
     print("Sensor initialised")
